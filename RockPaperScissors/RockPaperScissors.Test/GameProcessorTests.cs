@@ -10,9 +10,9 @@ namespace RockPaperScissors.Test
 
         public GameProcessorTests()
         {
-            rockPlayer = new RockOpponent();
-            paperPlayer = new PaperOpponent();
-            scissorsPlayer = new ScissorsOpponent();
+            rockPlayer = new RockPlayer();
+            paperPlayer = new PaperPlayer();
+            scissorsPlayer = new ScissorsPlayer();
         }
 
         [Fact]

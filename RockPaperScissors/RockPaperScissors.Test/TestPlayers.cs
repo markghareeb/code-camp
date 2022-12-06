@@ -1,6 +1,6 @@
 ﻿namespace RockPaperScissors.Test
 {
-    internal class RockOpponent : IPlayer
+    internal class RockPlayer : IPlayer
     {
         public GameProcessor.Moves GetMove()
         {
@@ -8,7 +8,7 @@
         }
     }
 
-    internal class PaperOpponent : IPlayer
+    internal class PaperPlayer : IPlayer
     {
         public GameProcessor.Moves GetMove()
         {
@@ -16,7 +16,7 @@
         }
     }
 
-    internal class ScissorsOpponent : IPlayer
+    internal class ScissorsPlayer : IPlayer
     {
         public GameProcessor.Moves GetMove()
         {
