@@ -8,15 +8,17 @@
 
             while (true)
             {
-                gameState.Snake.Move();
-                gameState.DrawBoard();
-                if (Console.KeyAvailable)
+                if(!Console.KeyAvailable)
+                {
+                    gameState.Snake.Move(gameState.ApplePosition);
+                    Console.SetCursorPosition(0, 0);
+                    gameState.DrawBoard();
+                    Thread.Sleep(100);
+                }
+                else
                 {
                     gameState.Snake.UpdateDirection(Console.ReadKey(false));
                 }
-                
-                Thread.Sleep(1000);
-                Console.Clear();
             }
         }
     }

@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Snake
+﻿namespace Snake
 {
     internal class Snake
     {
@@ -24,8 +17,14 @@ namespace Snake
                 Body.AddLast((startingPosition.x, startingPosition.y - i));
             }
 
-            Head = Body.First;
-            Tail = Body.Last;
+            if (Body.First != null)
+            {
+                Head = Body.First;
+            }
+            if (Body.Last != null)
+            {
+                Tail = Body.Last;
+            }
             Direction = Direction.Right;
         }
 
@@ -44,14 +43,15 @@ namespace Snake
             return Tail.Value == position;
         }
 
-        public void Move()
+        public void Move((int x, int y) applePosition)
         {
             Head = Body.AddFirst(CalculateNewHead());
-            if (Tail.Previous != null)
+            
+            if (applePosition != Head.Value)
             {
                 Tail = Tail.Previous;
+                Body.RemoveLast();
             }
-            Body.RemoveLast();
         }
 
         public void UpdateDirection(ConsoleKeyInfo keyPressed)
