@@ -56,6 +56,8 @@
 
         public void UpdateDirection(ConsoleKeyInfo keyPressed)
         {
+            // should not allow for moving back onto itself
+            // eg moving left should not allow for right key press (ignore it)
             if (keyPressed.Key == ConsoleKey.UpArrow)
             {
                 Direction = Direction.Up;

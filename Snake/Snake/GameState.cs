@@ -52,7 +52,7 @@ namespace Snake
             {
                 for (int j = 0; j < Board.GetLength(1); j++)
                 {
-                    //this 100 thousand percent needs to go somewhere else
+                    //this 100,000 percent needs to go somewhere else
                     if (Snake.IsHere((i, j)) && ApplePosition == (i, j))
                     {
                         ApplePosition = GetApplePosition();
