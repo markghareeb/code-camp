@@ -43,11 +43,11 @@
             return Tail.Value == position;
         }
 
-        public void Move((int x, int y) applePosition)
+        public void Move(bool appleEaten)
         {
             Head = Body.AddFirst(CalculateNewHead());
             
-            if (applePosition != Head.Value)
+            if (!appleEaten)
             {
                 Tail = Tail.Previous;
                 Body.RemoveLast();
@@ -56,8 +56,14 @@
 
         public void UpdateDirection(ConsoleKeyInfo keyPressed)
         {
-            // should not allow for moving back onto itself
-            // eg moving left should not allow for right key press (ignore it)
+            if (keyPressed.Key == ConsoleKey.UpArrow && Direction == Direction.Down ||
+                keyPressed.Key == ConsoleKey.RightArrow && Direction == Direction.Left ||
+                keyPressed.Key == ConsoleKey.DownArrow && Direction == Direction.Up ||
+                keyPressed.Key == ConsoleKey.LeftArrow && Direction == Direction.Right)
+            {
+                return;
+            }
+
             if (keyPressed.Key == ConsoleKey.UpArrow)
             {
                 Direction = Direction.Up;
@@ -76,8 +82,8 @@
             }
         }
 
-        private (int x, int y) CalculateNewHead()
-        {
+        public (int x, int y) CalculateNewHead()
+        { 
             (int x, int y) newHeadPosition;
             if (Direction == Direction.Up)
             {

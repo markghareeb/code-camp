@@ -16,14 +16,18 @@ namespace Snake
         public (int x, int y) StartingPosition { get; set; }
         public (int x, int y) ApplePosition { get; set; }
         public Snake Snake { get; set; }
-
+        public int Score { get; set; }
+        public int Speed { get; set; }
         public GameState()
         {
+            //consider setting read-only vars for wall positions
             Board = new char[20, 20];
             InitializeBoard(Board);
             //parameterize snake? 
             Snake = new Snake((10, 10), 3);
             ApplePosition = GetApplePosition();
+            Score = 0;
+            Speed = 500;
         }
 
         private static void InitializeBoard(char[,] board) 
@@ -52,12 +56,6 @@ namespace Snake
             {
                 for (int j = 0; j < Board.GetLength(1); j++)
                 {
-                    //this 100,000 percent needs to go somewhere else
-                    if (Snake.IsHere((i, j)) && ApplePosition == (i, j))
-                    {
-                        ApplePosition = GetApplePosition();
-                    }
-
                     if (Snake.IsHere((i, j)))
                     {
                         if (Snake.IsHead((i, j)))
@@ -95,6 +93,36 @@ namespace Snake
                 applePosition = (Random.Shared.Next(1, Board.GetLength(0) - 1), Random.Shared.Next(1, Board.GetLength(1) - 1));
             } while (Snake.IsHere(applePosition));
             return applePosition;
+        }
+
+        public bool GameOverCollision()
+        {
+            var nextHeadPosition = Snake.CalculateNewHead();
+            return WallHit(nextHeadPosition) || BodyHit(nextHeadPosition);
+        }
+        
+        public bool WallHit((int x, int y) nextHeadPosition)
+        {
+            return nextHeadPosition.x <= 0 || // checks top wall 
+                   nextHeadPosition.x >= Board.GetLength(0) - 1 || // checks bottom wall 
+                   nextHeadPosition.y <= 0 || // checks left wall 
+                   nextHeadPosition.y >= Board.GetLength(1) - 1; // checks right wall 
+        }
+
+        public bool BodyHit((int x, int y) nextHeadPosition)
+        {
+            return Snake.IsHere(nextHeadPosition);
+        }
+
+        public bool WillTheSnakeEatAnApple()
+        {
+            var nextHeadPosition = Snake.CalculateNewHead();
+            return AppleHit(nextHeadPosition);
+        }
+
+        public bool AppleHit((int x, int y) nextHeadPosition)
+        {
+            return nextHeadPosition == ApplePosition;
         }
     }
 }

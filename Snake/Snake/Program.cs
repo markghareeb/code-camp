@@ -5,30 +5,46 @@
         static void Main(string[] args)
         {
             var gameState = new GameState();
-
+            Console.Clear();
             while (true)
             {
-                if(!Console.KeyAvailable)
+                if(!Console.KeyAvailable) //consider flipping this logic to else
                 {
-                    // detect collision
-                    // // based apple position, if snake head is about to eat the apple, pass in a true; else false
-                    gameState.Snake.Move(gameState.ApplePosition);
+                    if (gameState.GameOverCollision())
+                    {
+                        Console.Beep();
+                        Console.WriteLine("YOU LOSE");
+                        Environment.Exit(0);
+                    }
+
+                    var appleEaten = gameState.WillTheSnakeEatAnApple();
+                    if (appleEaten)
+                    {
+                        gameState.ApplePosition = gameState.GetApplePosition();
+                        gameState.Score += gameState.Speed;
+                        Console.Beep();
+                    }
+                    gameState.Snake.Move(appleEaten);
+                    //add score board
                     
-                    // // snake head == a wall
-                    // // snake head == snake linked list position
                     // // bonus for speed for better score
 
                     Console.SetCursorPosition(0, 0);
                     gameState.DrawBoard();
+                    Console.WriteLine(gameState.Score);
                     // maybe eating apples increases this? game state has a var for it?
                     // every x number of apples eaten or score threshold is passed, decrease sleep by 10 or 20 percent
                     // // or milliseconds or something
-                    Thread.Sleep(100);
+                    Thread.Sleep(gameState.Speed);
                 }
                 else
                 {
                     gameState.Snake.UpdateDirection(Console.ReadKey(false));
                 }
+                /*
+                if (Console.KeyAvailable) { gameState.Snake.UpdateDirection(Console.ReadKey(false)); }
+                if (gameState.Timer.Elapsed > 1000) {  doTheOtherThings() }
+                */            
             }
         }
     }
