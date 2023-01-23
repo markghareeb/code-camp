@@ -5,7 +5,8 @@
         public LinkedList<(int x, int y)> Body;
         public LinkedListNode<(int x, int y)> Head;
         public LinkedListNode<(int x, int y)> Tail;
-        public Direction Direction; 
+        public Direction Direction;
+        private Direction previousDirection; 
 
         public Snake((int x, int y) startingPosition, int length)
         {
@@ -45,6 +46,7 @@
 
         public void Move(bool appleEaten)
         {
+            previousDirection = Direction;
             Head = Body.AddFirst(CalculateNewHead());
             
             if (!appleEaten)
@@ -56,10 +58,10 @@
 
         public void UpdateDirection(ConsoleKeyInfo keyPressed)
         {
-            if (keyPressed.Key == ConsoleKey.UpArrow && Direction == Direction.Down ||
-                keyPressed.Key == ConsoleKey.RightArrow && Direction == Direction.Left ||
-                keyPressed.Key == ConsoleKey.DownArrow && Direction == Direction.Up ||
-                keyPressed.Key == ConsoleKey.LeftArrow && Direction == Direction.Right)
+            if (keyPressed.Key == ConsoleKey.UpArrow && previousDirection == Direction.Down ||
+                keyPressed.Key == ConsoleKey.RightArrow && previousDirection == Direction.Left ||
+                keyPressed.Key == ConsoleKey.DownArrow && previousDirection == Direction.Up ||
+                keyPressed.Key == ConsoleKey.LeftArrow && previousDirection == Direction.Right)
             {
                 return;
             }
@@ -107,6 +109,7 @@
 
     public enum Direction
     {
+        None,
         Up,
         Right,
         Down,

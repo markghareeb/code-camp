@@ -24,14 +24,12 @@
                         gameState.Score += gameState.Speed;
                         Console.Beep();
                     }
-                    gameState.Snake.Move(appleEaten);
-                    //add score board
-                    
-                    // // bonus for speed for better score
+                    gameState.Snake.Move(appleEaten);                    
 
                     Console.SetCursorPosition(0, 0);
                     gameState.DrawBoard();
                     Console.WriteLine(gameState.Score);
+                    // // bonus for speed for better score
                     // maybe eating apples increases this? game state has a var for it?
                     // every x number of apples eaten or score threshold is passed, decrease sleep by 10 or 20 percent
                     // // or milliseconds or something
