@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 
 namespace Snake
 {
@@ -11,32 +12,49 @@ namespace Snake
         private const char WALL = 'X';
         private const char APPLE = 'A';
         private const char BLANK = ' ';
-        
+
+        private readonly int topWallPosition;
+        private readonly int rightWallPosition;
+        private readonly int bottomWallPosition;
+        private readonly int leftWallPosition;
+
+        private Stopwatch gameTimer { get; set; }
+
         public char[,] Board { get; set; }
         public (int x, int y) StartingPosition { get; set; }
         public (int x, int y) ApplePosition { get; set; }
         public Snake Snake { get; set; }
         public int Score { get; set; }
         public int Speed { get; set; }
-        public GameState()
+        
+
+        public GameState(int boardHeight, int boardWidth)
         {
-            //consider setting read-only vars for wall positions
-            Board = new char[20, 20];
+            Board = new char[boardHeight, boardWidth];
+
+            topWallPosition = 0;
+            rightWallPosition = boardWidth - 1;
+            bottomWallPosition = boardHeight - 1;
+            leftWallPosition = 0;
+
             InitializeBoard(Board);
             //parameterize snake? 
-            Snake = new Snake((10, 10), 3);
-            ApplePosition = GetApplePosition();
+            Snake = new Snake((boardHeight/2, boardWidth/2), 3);
+            ApplePosition = GetNewApplePosition();
             Score = 0;
             Speed = 500;
+
+            gameTimer = new Stopwatch();
+            gameTimer.Start();
         }
 
-        private static void InitializeBoard(char[,] board) 
+        private void InitializeBoard(char[,] board) 
         { 
-            for (int i = 0; i < board.GetLength(0); i++) 
+            for (int i = 0; i <= bottomWallPosition; i++) 
             { 
-                for (int j = 0; j < board.GetLength(1); j++)
+                for (int j = 0; j <= rightWallPosition; j++)
                 {
-                    if (i == 0 || j == 0 || i == board.GetLength(0) - 1 || j == board.GetLength(1) - 1)
+                    if (i == 0 || j == 0 || i == bottomWallPosition || j == rightWallPosition)
                     {
                         board[i, j] = WALL;
                     }
@@ -52,9 +70,9 @@ namespace Snake
         {
             StringBuilder board = new StringBuilder();
 
-            for (int i = 0; i < Board.GetLength(0); i++)
+            for (int i = 0; i <= bottomWallPosition; i++)
             {
-                for (int j = 0; j < Board.GetLength(1); j++)
+                for (int j = 0; j <= rightWallPosition; j++)
                 {
                     if (Snake.IsHere((i, j)))
                     {
@@ -85,12 +103,39 @@ namespace Snake
             Console.Write(board.ToString());
         }
 
-        public (int x, int y) GetApplePosition()
+        public void DoGameLoop(bool moveOverride)
+        {
+            if (gameTimer.ElapsedMilliseconds >= Speed || moveOverride)
+            {
+                if (GameOverCollision())
+                {
+                    Console.Beep();
+                    Console.WriteLine("YOU LOSE");
+                    Environment.Exit(0);
+                }
+
+                var appleEaten = WillTheSnakeEatAnApple();
+                if (appleEaten)
+                {
+                    ApplePosition = GetNewApplePosition();
+                    Score += Speed;
+                    Console.Beep();
+                }
+                Snake.Move(appleEaten);
+
+                Console.SetCursorPosition(0, 0);
+                DrawBoard();
+                Console.WriteLine(Score);
+                gameTimer.Restart();
+            }
+        }
+
+        public (int x, int y) GetNewApplePosition()
         {
             (int x, int y) applePosition;
             do
             {
-                applePosition = (Random.Shared.Next(1, Board.GetLength(0) - 1), Random.Shared.Next(1, Board.GetLength(1) - 1));
+                applePosition = (Random.Shared.Next(1, bottomWallPosition - 1), Random.Shared.Next(1, rightWallPosition - 1));
             } while (Snake.IsHere(applePosition));
             return applePosition;
         }
@@ -103,10 +148,10 @@ namespace Snake
         
         public bool WallHit((int x, int y) nextHeadPosition)
         {
-            return nextHeadPosition.x <= 0 || // checks top wall 
-                   nextHeadPosition.x >= Board.GetLength(0) - 1 || // checks bottom wall 
-                   nextHeadPosition.y <= 0 || // checks left wall 
-                   nextHeadPosition.y >= Board.GetLength(1) - 1; // checks right wall 
+            return nextHeadPosition.x <= topWallPosition ||
+                   nextHeadPosition.y >= rightWallPosition || 
+                   nextHeadPosition.x >= bottomWallPosition ||
+                   nextHeadPosition.y <= leftWallPosition;
         }
 
         public bool BodyHit((int x, int y) nextHeadPosition)

@@ -6,10 +6,16 @@
         public LinkedListNode<(int x, int y)> Head;
         public LinkedListNode<(int x, int y)> Tail;
         public Direction Direction;
+        
         private Direction previousDirection; 
 
         public Snake((int x, int y) startingPosition, int length)
         {
+            if (length <= 0)
+            {
+                throw new ArgumentException();
+            }    
+
             Body = new LinkedList<(int x, int y)>();
             Body.AddLast((startingPosition.x, startingPosition.y));
             
@@ -18,14 +24,9 @@
                 Body.AddLast((startingPosition.x, startingPosition.y - i));
             }
 
-            if (Body.First != null)
-            {
-                Head = Body.First;
-            }
-            if (Body.Last != null)
-            {
-                Tail = Body.Last;
-            }
+            Head = Body!.First;
+            Tail = Body!.Last;
+
             Direction = Direction.Right;
         }
 
