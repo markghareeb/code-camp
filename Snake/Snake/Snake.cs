@@ -59,6 +59,8 @@
 
         public void UpdateDirection(ConsoleKeyInfo keyPressed)
         {
+
+            
             if (keyPressed.Key == ConsoleKey.UpArrow && previousDirection == Direction.Down ||
                 keyPressed.Key == ConsoleKey.RightArrow && previousDirection == Direction.Left ||
                 keyPressed.Key == ConsoleKey.DownArrow && previousDirection == Direction.Up ||
@@ -83,28 +85,16 @@
             {
                 Direction = Direction.Left;
             }
+            
         }
 
         public (int x, int y) CalculateNewHead()
-        { 
-            (int x, int y) newHeadPosition;
-            if (Direction == Direction.Up)
-            {
-                newHeadPosition = (Head.Value.x - 1, Head.Value.y);
-            } 
-            else if (Direction == Direction.Right)
-            {
-                newHeadPosition = (Head.Value.x, Head.Value.y + 1);
-            }
-            else if (Direction == Direction.Down)
-            {
-                newHeadPosition = (Head.Value.x + 1, Head.Value.y);
-            }
-            else
-            {
-                newHeadPosition = (Head.Value.x, Head.Value.y - 1);
-            }
-            return newHeadPosition;
+        {
+            // depending on the direction add or subtract 1
+            // from the x or y of the current head position 
+            // return the new x and y coordinate
+
+            return (15, 16);
         }
     }
 

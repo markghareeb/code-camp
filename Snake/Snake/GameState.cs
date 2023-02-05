@@ -130,18 +130,20 @@ namespace Snake
 
         public (int x, int y) GetNewApplePosition()
         {
-            (int x, int y) applePosition;
-            do
-            {
-                applePosition = (Random.Shared.Next(1, bottomWallPosition - 1), Random.Shared.Next(1, rightWallPosition - 1));
-            } while (Snake.IsHere(applePosition));
-            return applePosition;
+            // generate a random x and y coordinate for the apple position 
+            // make sure the apple position isn't in the wall or snake!
+            // return the apple position
+
+            return (20, 20);
         }
 
         public bool GameOverCollision()
         {
-            var nextHeadPosition = Snake.CalculateNewHead();
-            return WallHit(nextHeadPosition) || BodyHit(nextHeadPosition);
+            // get the next position of a snake head
+            // check if the position is the same as the wall
+            // check if the position is the same as the snake body
+
+            return false;
         }
         
         public bool WallHit((int x, int y) nextHeadPosition)
@@ -159,8 +161,11 @@ namespace Snake
 
         public bool WillTheSnakeEatAnApple()
         {
-            var nextHeadPosition = Snake.CalculateNewHead();
-            return nextHeadPosition == ApplePosition;
+            // get the next position of a snake head
+            // get the position of the apple
+            // if they match, return true, otherwise return false
+
+            return false;
         }
     }
 }
