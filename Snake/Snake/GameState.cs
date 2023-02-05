@@ -5,7 +5,6 @@ namespace Snake
 {
     internal class GameState
     {
-        //should we do this? 
         private const char HEAD = 'H';
         private const char BODY = 'S';
         private const char TAIL = 'T';
@@ -38,7 +37,6 @@ namespace Snake
             leftWallPosition = 0;
 
             InitializeBoard(Board);
-            //parameterize snake? 
             Snake = new Snake((boardHeight/2, boardWidth/2), 3);
             ApplePosition = GetNewApplePosition();
             Score = 0;
@@ -162,11 +160,6 @@ namespace Snake
         public bool WillTheSnakeEatAnApple()
         {
             var nextHeadPosition = Snake.CalculateNewHead();
-            return AppleHit(nextHeadPosition);
-        }
-
-        public bool AppleHit((int x, int y) nextHeadPosition)
-        {
             return nextHeadPosition == ApplePosition;
         }
     }
